@@ -12,12 +12,10 @@ namespace ClipUrl.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ShortUrl>()
-                .HasKey(s => s.Id);
-
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ClipUrlDbContext).Assembly);
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<ShortUrl> ShortUrls { get; set; }
+        public DbSet<ShortUrl> ShortUrls => Set<ShortUrl>();
     }
 }
