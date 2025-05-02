@@ -13,7 +13,7 @@ namespace ClipUrl.Infrastructure
             )
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection")
-                ?? throw new ArgumentNullException(nameof(configuration));
+                ?? throw new InvalidOperationException("Missing DB Connection String.");
 
             services.AddDbContextPool<ClipUrlDbContext>(options =>
             {
