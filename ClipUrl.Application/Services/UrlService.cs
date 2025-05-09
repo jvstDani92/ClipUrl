@@ -1,5 +1,6 @@
 ﻿using ClipUrl.Domain.Entities;
 using ClipUrl.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClipUrl.Application.Services
 {
@@ -25,7 +26,7 @@ namespace ClipUrl.Application.Services
         public async Task<string> CreateShortUrlAsync(string originalUrl, Guid? userId = null, DateTime? expiresAtUtc = null)
         {
             if (string.IsNullOrWhiteSpace(originalUrl))
-                throw new ArgumentException("Original URL cannot be null or empty.", nameof(originalUrl));
+                throw new ArgumentNullException("Original URL cannot be null or empty.", nameof(originalUrl));
 
             if (!expiresAtUtc.HasValue)
                 expiresAtUtc = DateTime.UtcNow.AddDays(30); // Default expiration date is 30 days from now.
@@ -33,46 +34,105 @@ namespace ClipUrl.Application.Services
             if (expiresAtUtc.HasValue && expiresAtUtc.Value < DateTime.UtcNow)
                 throw new ArgumentException("Expiration date cannot be in the past.", nameof(expiresAtUtc));
 
-            var hash = await GenerateUniqueHashAsync();
-
-            var shortUrl = new ShortUrl
+            try
             {
-                OriginalUrl = originalUrl,
-                Hash = hash,
-                UserId = userId,
-                ExpiresAtUtc = expiresAtUtc
-            };
+                var hash = await GenerateUniqueHashAsync();
 
-            await _shortUrlRepository.AddAsync(shortUrl);
-            await _shortUrlRepository.SaveChangesAsync();
+                var shortUrl = new ShortUrl
+                {
+                    OriginalUrl = originalUrl,
+                    Hash = hash,
+                    UserId = userId,
+                    ExpiresAtUtc = expiresAtUtc
+                };
 
-            return hash;
+                await _shortUrlRepository.AddAsync(shortUrl);
+                await _shortUrlRepository.SaveChangesAsync();
+
+                return hash;
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new DbUpdateException("An error ocurred while inserting the short URL in database.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while creating the short URL.", ex);
+            }
         }
 
+        /// <summary>
+        /// Deletes a short URL from the database.
+        /// </summary>
+        /// <param name="shortUrl">The hash to delete</param>
+        /// <returns>Bool</returns>
+        /// <exception cref="ArgumentException">Short Url can´t be null</exception>
+        /// <exception cref="DbUpdateException">Exception during the delete command with EF</exception>
+        /// <exception cref="Exception">General exception</exception>
         public async Task<bool> DeleteShortUrlAsync(string shortUrl)
         {
             if (string.IsNullOrWhiteSpace(shortUrl))
-                throw new ArgumentException("Short URL cannot be null or empty.", nameof(shortUrl));
+                throw new ArgumentNullException("Short URL cannot be null or empty.", nameof(shortUrl));
 
-            var shortUrlEntity = await _shortUrlRepository.GetEntityAsync(x => x.Hash.Equals(shortUrl));
+            try
+            {
+                var shortUrlEntity = await _shortUrlRepository.GetEntityAsync(x => x.Hash.Equals(shortUrl));
+                if (shortUrlEntity is null)
+                    return false;
 
-            if (shortUrlEntity is null)
-                return false;
+                _shortUrlRepository.Delete(shortUrlEntity);
+                await _shortUrlRepository.SaveChangesAsync();
 
-            _shortUrlRepository.Delete(shortUrlEntity);
-            await _shortUrlRepository.SaveChangesAsync();
-
-            return true;
+                return true;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                throw new DbUpdateException("Error occurred while deleting the short URL in the database.", dbEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while deleting the short URL.", ex);
+            }
         }
+
 
         public Task<IEnumerable<string>> GetAllShortUrlsAsync(Guid? userId = null)
         {
             throw new NotImplementedException();
         }
 
-        public Task<string> GetOriginalUrlAsync(string shortUrl)
+        /// <summary>
+        /// Retrieves the original URL for a given short URL.
+        /// </summary>
+        /// <param name="shortUrl">The hash of the URL to retrieve</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">The hash can´t be null</exception>
+        /// <exception cref="ArgumentException">The entity from database can´t be null</exception>
+        /// <exception cref="DbUpdateException">Exception during the delete command with EF</exception>
+        /// <exception cref="Exception">General exception</exception>
+        public async Task<string> GetOriginalUrlAsync(string shortUrl)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(shortUrl))
+                throw new ArgumentNullException(nameof(shortUrl), "Short URL cannot be null or empty.");
+
+            try
+            {
+                var shortUrlEntity = await _shortUrlRepository.GetEntityAsync(x => x.Hash.Equals(shortUrl));
+
+                if (shortUrlEntity is null)
+                    throw new ArgumentException("Short URL not found.", nameof(shortUrl));
+
+                // TODO: Procesar y mapear a DTO, si es necesario.
+                return shortUrlEntity.OriginalUrl;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                throw new DbUpdateException("An error occurred while retrieving the short URL from the database.", dbEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving the original URL.", ex);
+            }
         }
 
         public Task<bool> UpdateShortUrlAsync(string shortUrl, string newOriginalUrl, DateTime? newExpiresAtUtc = null)
