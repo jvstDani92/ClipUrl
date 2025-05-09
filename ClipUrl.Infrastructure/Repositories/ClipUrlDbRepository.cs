@@ -21,7 +21,7 @@ namespace ClipUrl.Infrastructure.Repositories
             await _entities.AddAsync(entity);
         }
 
-        public void DeleteAsync(T entity)
+        public void Delete(T entity)
         {
             _entities.Remove(entity);
         }
@@ -55,6 +55,34 @@ namespace ClipUrl.Infrastructure.Repositories
             query = includes.Aggregate(query, (current, include) => current.Include(include));
 
             return await query.FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id);
+        }
+
+        public async Task<IEnumerable<T>> GetEntitiesAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _entities.Where(predicate).ToListAsync();
+        }
+
+        public async Task<IEnumerable<T>> GetEntitiesWithIncludesAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
+        {
+            var query = _entities.AsNoTracking();
+
+            query = includes.Aggregate(query, (current, include) => current.Include(include));
+
+            return await query.Where(predicate).ToListAsync();
+        }
+
+        public async Task<T?> GetEntityAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _entities.FirstOrDefaultAsync(predicate);
+        }
+
+        public async Task<T?> GetEntityWithIncludesAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
+        {
+            var query = _entities.AsNoTracking();
+
+            query = includes.Aggregate(query, (current, include) => current.Include(include));
+
+            return await _entities.FirstOrDefaultAsync(predicate);
         }
 
         public async Task SaveChangesAsync()
