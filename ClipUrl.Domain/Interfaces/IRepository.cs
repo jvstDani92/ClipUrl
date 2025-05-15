@@ -22,7 +22,7 @@ namespace ClipUrl.Domain.Interfaces
 
         Task AddAsync(T entity);
 
-        Task UpdateAsync(T entity);
+        void UpdateAsync(T entity);
 
         void Delete(T entity);
 
