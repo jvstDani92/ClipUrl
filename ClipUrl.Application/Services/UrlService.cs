@@ -95,7 +95,6 @@ namespace ClipUrl.Application.Services
             }
         }
 
-
         public Task<IEnumerable<string>> GetAllShortUrlsAsync(Guid? userId = null)
         {
             throw new NotImplementedException();
