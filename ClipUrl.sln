@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipUrl.Api", "ClipUrl.Api\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipUrl.Domain.Test", "ClipUrl.Domain.Test\ClipUrl.Domain.Test.csproj", "{062531D3-7AAB-40BD-AB22-0F3ACBF0108B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipUrl.Infrastructure.Test", "ClipUrl.Domain.Test\ClipUrl.Infrastructure.Test.csproj", "{062531D3-7AAB-40BD-AB22-0F3ACBF0108B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipUrl.Application.Test", "ClipUrl.Application.Test\ClipUrl.Application.Test.csproj", "{7C52508B-4050-4B67-B450-DD587053777A}"
 EndProject

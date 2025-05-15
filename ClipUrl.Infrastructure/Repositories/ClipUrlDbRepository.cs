@@ -90,7 +90,7 @@ namespace ClipUrl.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(T entity)
+        public async void UpdateAsync(T entity)
         {
             _entities.Update(entity);
             await _context.SaveChangesAsync();

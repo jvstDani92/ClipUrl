@@ -43,6 +43,7 @@ namespace ClipUrl.Application.Services
                     OriginalUrl = originalUrl,
                     Hash = hash,
                     UserId = userId,
+                    CreatedAtUtc = DateTime.UtcNow,
                     ExpiresAtUtc = expiresAtUtc
                 };
 
