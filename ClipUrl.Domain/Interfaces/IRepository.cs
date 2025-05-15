@@ -12,11 +12,19 @@ namespace ClipUrl.Domain.Interfaces
 
         Task<T?> GetByIdWithIncludesAsync(Guid id, params Expression<Func<T, object>>[] includes);
 
+        Task<T?> GetEntityAsync(Expression<Func<T, bool>> predicate);
+
+        Task<T?> GetEntityWithIncludesAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
+
+        Task<IEnumerable<T>> GetEntitiesAsync(Expression<Func<T, bool>> predicate);
+
+        Task<IEnumerable<T>> GetEntitiesWithIncludesAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
+
         Task AddAsync(T entity);
 
-        void UpdateAsync(T entity);
+        Task UpdateAsync(T entity);
 
-        void DeleteAsync(T entity);
+        void Delete(T entity);
 
         Task SaveChangesAsync();
     }
