@@ -13,3 +13,13 @@ use the code, in whole or in part, for any other purpose without the prior
 written consent of the copyright holder.
 
 
+---
+
+## Changelog ### v1.0.0 - 15/05/2025
+
+- <b>New</b>: Create domain, infrastructure, application and api layer.
+- <b>New</b>: Create link shortening service.
+- <b>New</b>: Create link shortening controller.
+- <b>New</b>: Create link shortening repository.
+
+
