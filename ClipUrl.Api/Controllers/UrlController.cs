@@ -24,7 +24,7 @@ namespace ClipUrl.Api.Controllers
                 if (completeUrl is null)
                     return NotFound();
 
-                return Redirect(completeUrl);
+                return Ok(completeUrl);
             }
             catch (ArgumentNullException nullEx)
             {
