@@ -36,7 +36,6 @@ namespace ClipUrl.Api.Controllers
             }
         }
 
-
         [HttpPost]
         public async Task<IActionResult> InsertUrl([FromBody] string url)
         {
