@@ -1,4 +1,6 @@
-﻿using ClipUrl.Infrastructure.Data;
+﻿using ClipUrl.Domain.Interfaces;
+using ClipUrl.Infrastructure.Data;
+using ClipUrl.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +25,8 @@ namespace ClipUrl.Infrastructure
                     sql.EnableRetryOnFailure(5);
                 });
             });
+
+            services.AddScoped(typeof(IRepository<>), typeof(ClipUrlDbRepository<>));
 
             return services;
         }
