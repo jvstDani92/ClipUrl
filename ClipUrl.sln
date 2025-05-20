@@ -16,8 +16,17 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipUrl.Infrastructure.Test", "ClipUrl.Domain.Test\ClipUrl.Infrastructure.Test.csproj", "{062531D3-7AAB-40BD-AB22-0F3ACBF0108B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipUrl.Application.Test", "ClipUrl.Application.Test\ClipUrl.Application.Test.csproj", "{7C52508B-4050-4B67-B450-DD587053777A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{062531D3-7AAB-40BD-AB22-0F3ACBF0108B} = {062531D3-7AAB-40BD-AB22-0F3ACBF0108B}
+		{1A94CABE-693F-400F-AEB9-571988621B72} = {1A94CABE-693F-400F-AEB9-571988621B72}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipUrl.Api.Test", "ClipUrl.Api.Test\ClipUrl.Api.Test.csproj", "{CF091D90-71B7-4BB0-BC83-AA2205FADD56}"
+	ProjectSection(ProjectDependencies) = postProject
+		{062531D3-7AAB-40BD-AB22-0F3ACBF0108B} = {062531D3-7AAB-40BD-AB22-0F3ACBF0108B}
+		{1A94CABE-693F-400F-AEB9-571988621B72} = {1A94CABE-693F-400F-AEB9-571988621B72}
+		{7C52508B-4050-4B67-B450-DD587053777A} = {7C52508B-4050-4B67-B450-DD587053777A}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementos de la solución", "Elementos de la solución", "{D107F4C8-89CC-BEA8-D3D7-CA6B7733353D}"
 	ProjectSection(SolutionItems) = preProject
