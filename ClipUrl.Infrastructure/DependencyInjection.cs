@@ -1,5 +1,6 @@
 ﻿using ClipUrl.Domain.Interfaces;
 using ClipUrl.Infrastructure.Data;
+using ClipUrl.Infrastructure.Identity;
 using ClipUrl.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +23,18 @@ namespace ClipUrl.Infrastructure
                 options.UseSqlServer(connectionString, sql =>
                 {
                     sql.MigrationsAssembly(typeof(ClipUrlDbContext).Assembly.GetName().Name);
+                    sql.EnableRetryOnFailure(5);
+                });
+            });
+
+            var connectionStringAuthDb = configuration.GetConnectionString("AuthDbConnection")
+                ?? throw new InvalidOperationException("Missing DB Connection String.");
+
+            services.AddDbContextPool<AuthDbContext>(options =>
+            {
+                options.UseSqlServer(connectionStringAuthDb, sql =>
+                {
+                    sql.MigrationsAssembly(typeof(AuthDbContext).Assembly.GetName().Name);
                     sql.EnableRetryOnFailure(5);
                 });
             });

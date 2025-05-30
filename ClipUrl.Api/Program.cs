@@ -1,3 +1,4 @@
+using ClipUrl.Api.Configuration;
 using ClipUrl.Application;
 using ClipUrl.Infrastructure;
 
@@ -14,8 +15,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
-var app = builder.Build();
+builder.Services.AddIdentityAndJwtAuth(builder.Configuration);
 
+var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
