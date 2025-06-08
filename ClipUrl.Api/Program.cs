@@ -1,6 +1,7 @@
 using ClipUrl.Api.Configuration;
 using ClipUrl.Application;
 using ClipUrl.Infrastructure;
+using ClipUrl.Infrastructure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,13 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddIdentityAndJwtAuth(builder.Configuration);
 
 var app = builder.Build();
+
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var env = app.Environment;
+
+    await IdentitySeeder.SeedAsync(scope.ServiceProvider, builder.Configuration, env.IsDevelopment());
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();
