@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ClipUrl.Domain\ClipUrl.Domain.csproj" />
+    <ProjectReference Include="..\ClipUrl.Infrastructure\ClipUrl.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
