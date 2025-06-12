@@ -46,6 +46,7 @@ namespace ClipUrl.Infrastructure
             services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
             services.AddScoped<IJwtProvider, JwtProvider>();
             services.AddScoped<ITokenValidationHandler, TokenValidationHandler>();
+            services.AddScoped<IAuthService, JwtAuthService>();
 
             return services;
         }

@@ -12,6 +12,8 @@ namespace ClipUrl.Infrastructure.Identity
 
         }
 
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
@@ -27,6 +29,17 @@ namespace ClipUrl.Infrastructure.Identity
             builder.Entity<ApplicationUser>()
                 .Property(u => u.DisplayName)
                 .HasMaxLength(100);
+
+            builder.Entity<RefreshToken>(configuration =>
+            {
+                configuration.HasKey(x => x.Id);
+                configuration.HasIndex(x => x.TokenHash).IsUnique();
+                configuration.Property(x => x.TokenHash).HasMaxLength(128).IsRequired();
+                configuration.HasOne<ApplicationUser>()
+                    .WithMany()
+                    .HasForeignKey(rt => rt.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
         }
     }
 }
