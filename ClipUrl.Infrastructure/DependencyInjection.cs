@@ -1,4 +1,6 @@
-﻿using ClipUrl.Domain.Interfaces;
+﻿using ClipUrl.Application.Services.AuthService;
+using ClipUrl.Domain.Interfaces;
+using ClipUrl.Infrastructure.Auth;
 using ClipUrl.Infrastructure.Data;
 using ClipUrl.Infrastructure.Identity;
 using ClipUrl.Infrastructure.Repositories;
@@ -40,6 +42,10 @@ namespace ClipUrl.Infrastructure
             });
 
             services.AddScoped(typeof(IRepository<>), typeof(ClipUrlDbRepository<>));
+
+            services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
+            services.AddScoped<IJwtProvider, JwtProvider>();
+            services.AddScoped<ITokenValidationHandler, TokenValidationHandler>();
 
             return services;
         }
