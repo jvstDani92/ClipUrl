@@ -1,6 +1,5 @@
 ﻿using ClipUrl.Domain.Entities;
 using ClipUrl.Domain.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace ClipUrl.Application.Services
 {
@@ -52,14 +51,15 @@ namespace ClipUrl.Application.Services
 
                 return hash;
             }
-            catch (DbUpdateException ex)
+            catch (InvalidOperationException ex)
             {
-                throw new DbUpdateException("An error ocurred while inserting the short URL in database.", ex);
+                throw new InvalidOperationException("An invalid operation occurred while creating the hash URL.", ex);
             }
             catch (Exception ex)
             {
                 throw new Exception("An error occurred while creating the short URL.", ex);
             }
+
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace ClipUrl.Application.Services
         public async Task<bool> DeleteShortUrlAsync(string shortUrl)
         {
             if (string.IsNullOrWhiteSpace(shortUrl))
-                throw new ArgumentNullException("Short URL cannot be null or empty.", nameof(shortUrl));
+                throw new ArgumentNullException(nameof(shortUrl), "Short URL cannot be null or empty.");
 
             try
             {
@@ -86,10 +86,11 @@ namespace ClipUrl.Application.Services
 
                 return true;
             }
-            catch (DbUpdateException dbEx)
+            catch (InvalidOperationException invalidOpEx)
             {
-                throw new DbUpdateException("Error occurred while deleting the short URL in the database.", dbEx);
+                throw new InvalidOperationException("An invalid operation occurred while deleting the short URL.", invalidOpEx);
             }
+
             catch (Exception ex)
             {
                 throw new Exception("An error occurred while deleting the short URL.", ex);
@@ -125,9 +126,9 @@ namespace ClipUrl.Application.Services
                 // TODO: Procesar y mapear a DTO, si es necesario.
                 return shortUrlEntity.OriginalUrl;
             }
-            catch (DbUpdateException dbEx)
+            catch (InvalidOperationException dbEx)
             {
-                throw new DbUpdateException("An error occurred while retrieving the short URL from the database.", dbEx);
+                throw new InvalidOperationException("An error occurred while retrieving the short URL from the database.", dbEx);
             }
             catch (Exception ex)
             {
