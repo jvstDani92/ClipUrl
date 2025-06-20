@@ -47,6 +47,9 @@ namespace ClipUrl.Infrastructure.Auth
 
         public async Task<AuthResponseDto> RefreshTokenAsync(string refreshToken, CancellationToken ct)
         {
+            if (string.IsNullOrWhiteSpace(refreshToken))
+                throw new ArgumentException("Refresh token cannot be null or whitespace.", nameof(refreshToken));
+
             var validation = await _validatorHandler.ValidateAsync(
                 refreshToken,
                 TokenType.Refresh,
@@ -73,6 +76,12 @@ namespace ClipUrl.Infrastructure.Auth
 
         public async Task<AuthResponseDto> RegisterAsync(RegisterRequestDto request, CancellationToken ct)
         {
+            if (request is null)
+                throw new ArgumentNullException(nameof(request), "Registration request cannot be null.");
+
+            if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+                throw new ArgumentException("Email and password must be provided.", nameof(request));
+
             var user = new ApplicationUser
             {
                 Email = request.Email,
@@ -87,6 +96,7 @@ namespace ClipUrl.Infrastructure.Auth
             return await IssueTokenAsync(user, ct);
         }
 
+        #region Private Methods
         private async Task<AuthResponseDto> IssueTokenAsync(ApplicationUser user, CancellationToken ct)
         {
             var access = await _jwtProvider.CreateAccessTokenAsync(user, ct);
@@ -104,5 +114,7 @@ namespace ClipUrl.Infrastructure.Auth
             await _authDb.SaveChangesAsync(ct);
             return new(access, refresh, DateTime.UtcNow.AddMinutes(_options.AccessMins));
         }
+
+        #endregion
     }
 }
