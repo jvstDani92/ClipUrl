@@ -7,5 +7,9 @@ namespace ClipUrl.Application.Services.AuthService
         Task<string> CreateAccessTokenAsync(ApplicationUser user, CancellationToken ct);
 
         Task<string> CreateRefreshTokenAsync(ApplicationUser user, CancellationToken ct);
+
+        Task<string?> GetClaim(string claim, CancellationToken ct);
+
+        Task<Guid?> GetUserIdFromToken();
     }
 }

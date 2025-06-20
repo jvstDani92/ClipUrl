@@ -22,7 +22,7 @@ namespace ClipUrl.Application.Services
         /// <param name="expiresAtUtc">DateTime of expiration</param>
         /// <returns>Unique hash</returns>
         /// <exception cref="ArgumentException">Original URL can´t be null</exception>
-        public async Task<string> CreateShortUrlAsync(string originalUrl, Guid? userId = null, DateTime? expiresAtUtc = null)
+        public async Task<string> CreateShortUrlAsync(string originalUrl, CancellationToken ct, Guid? userId = null, DateTime? expiresAtUtc = null)
         {
             if (string.IsNullOrWhiteSpace(originalUrl))
                 throw new ArgumentNullException("Original URL cannot be null or empty.", nameof(originalUrl));
@@ -70,7 +70,7 @@ namespace ClipUrl.Application.Services
         /// <exception cref="ArgumentException">Short Url can´t be null</exception>
         /// <exception cref="DbUpdateException">Exception during the delete command with EF</exception>
         /// <exception cref="Exception">General exception</exception>
-        public async Task<bool> DeleteShortUrlAsync(string shortUrl)
+        public async Task<bool> DeleteShortUrlAsync(string shortUrl, CancellationToken ct)
         {
             if (string.IsNullOrWhiteSpace(shortUrl))
                 throw new ArgumentNullException(nameof(shortUrl), "Short URL cannot be null or empty.");
@@ -97,7 +97,7 @@ namespace ClipUrl.Application.Services
             }
         }
 
-        public Task<IEnumerable<string>> GetAllShortUrlsAsync(Guid? userId = null)
+        public Task<IEnumerable<string>> GetAllShortUrlsAsync(Guid userId, CancellationToken ct)
         {
             throw new NotImplementedException();
         }
@@ -111,7 +111,7 @@ namespace ClipUrl.Application.Services
         /// <exception cref="ArgumentException">The entity from database can´t be null</exception>
         /// <exception cref="DbUpdateException">Exception during the delete command with EF</exception>
         /// <exception cref="Exception">General exception</exception>
-        public async Task<string> GetOriginalUrlAsync(string shortUrl)
+        public async Task<string> GetOriginalUrlAsync(string shortUrl, CancellationToken ct)
         {
             if (string.IsNullOrWhiteSpace(shortUrl))
                 throw new ArgumentNullException(nameof(shortUrl), "Short URL cannot be null or empty.");
@@ -136,7 +136,7 @@ namespace ClipUrl.Application.Services
             }
         }
 
-        public Task<bool> UpdateShortUrlAsync(string shortUrl, string newOriginalUrl, DateTime? newExpiresAtUtc = null)
+        public Task<bool> UpdateShortUrlAsync(string shortUrl, string newOriginalUrl, CancellationToken ct, DateTime? newExpiresAtUtc = null)
         {
             throw new NotImplementedException();
         }
